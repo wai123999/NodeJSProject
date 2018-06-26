@@ -1,0 +1,36 @@
+*{
+  box-sizing:border-box;
+}
+
+.registerForm
+{
+  display:none;
+}
+
+.myForm,.registerForm{
+  overflow:hidden;
+  background-color:black;
+  width:100%;
+}
+
+.myForm form , .registerForm form{
+  margin:10px;
+}
+.myForm h1 , .registerForm h1{
+  color:white;
+}
+.myForm input,.registerForm input{
+  color:black;
+  width:100%;
+  margin:10px 0px;
+  padding:14px 16px;
+  border:none;
+}
+.myForm input[type="submit"],.myForm input[type="button"],.registerForm input[type="submit"]{
+    background-color:green;
+    color:white;
+}
+
+.myForm input:focus{
+  background-color:
+}

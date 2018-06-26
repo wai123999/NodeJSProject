@@ -1,0 +1,34 @@
+<!doctype>
+<html>
+  <head>
+      <title>Login Page</title>
+      <link rel="stylesheet" href="login.css" type="text/css" />
+  </head>
+
+
+  <body>
+       <div class="myForm">
+            <h1> Welcome </h1>
+            <form  action="/form" onsubmit="return isValidForm()" method="post">
+              <input type="text" placeholder="Username.." id="username" name="username">
+              <input type="password" placeholder="Password.." name="passwd">
+              <input type="submit" value="login"></input>
+            </form>
+        </div>
+      <script>
+          function isValidForm(){
+              //username at least length 6
+              var re = /[A-Za-z0-9_.]{6,}/;
+              var usernameTxt = document.getElementById('username').value;
+              if ( usernameTxt.match(re)){
+                  console.log('true');
+                  return true;
+              }
+              else{
+                console.log('false');
+                return false;
+              }
+          }
+      </script>
+  </body>
+</html>

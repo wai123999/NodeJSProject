@@ -1,0 +1,51 @@
+<!doctype>
+<html>
+  <head>
+      <title>Login Page</title>
+      <link rel="stylesheet" href="login.css" type="text/css" />
+  </head>
+
+
+  <body>
+       <div class="myForm">
+            <h1> Welcome </h1>
+            <form  action="/form" onsubmit="return isValidForm()" method="post">
+              <input type="text" placeholder="Username.." id="usrname" name="usrname">
+              <input type="password" placeholder="Password.." name="passwd">
+              <input type="submit" value="login" name="login"></input>
+              <input type="button" value="Register" onclick="register()"></input>
+            </form>
+        </div>
+        <div class="registerForm">
+            <h1> Please fill you data </h1>
+            <form  action="/register" onsubmit="return isValidForm()" method="post">
+              <input type="text" placeholder="Username.." id="usrname" name="usrname">
+              <input type="password" placeholder="Password.." name="passwd">
+              <input type="submit" value="Register" name="register"></input>
+          </form>
+        </div>
+        <h1 style="color:red;text-align:center;"><%=  msg %></h1>
+      <script>
+          function isValidForm(){
+              //username at least length 6
+							return true;
+              var re = /[A-Za-z0-9_.]{6,}/;
+              var usernameTxt = document.getElementById('username').value;
+              if ( usernameTxt.match(re)){
+                  console.log('true');
+                  return true;
+              }
+              else{
+                console.log('false');
+                return false;
+              }
+          }
+          function register(){
+              var myform = document.getElementsByClassName('myForm')[0];
+              var registerform = document.getElementsByClassName('registerForm')[0];
+              myform.style.display="none";
+              registerform.style.display="block";
+          }
+      </script>
+  </body>
+</html>
