@@ -6,6 +6,7 @@ var https = require('https'),fs = require('fs');
 var app = express();
 var mysql = require('mysql');
 var nodemailer = require('nodemailer');
+var async = require('async'); //use for waterfall
 
 var ccap = require('ccap');//Instantiated ccap class
 
@@ -50,7 +51,7 @@ httpServer.listen(4000,function(req,res){
 var con = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "qwe986532147",
+	password: "aa568893",
 	database: "wen"
 });
 
@@ -66,6 +67,7 @@ app.post('/form',function(req,res){
 		if ( obj.usrname === '' || obj.passwd === ''){
 				res.render('login',{msg:'Login Fail'});
 		}
+		/*
 		else{
 			var query = 'SELECT * FROM contact WHERE usrname="' + obj.usrname + '"' + 'AND password=SHA("' + obj.passwd +'")';
 		//var query = "SELECT * FROM contact ";
@@ -80,10 +82,59 @@ app.post('/form',function(req,res){
 							res.render('login',{msg:'Login Fail'});
 						}
 						else{
+							//login success
 							res.render('home',{msg:usrdata});
 						}
 					});
 			}
+			*/
+			async.waterfall([
+				function (callback,err){
+					  //query the result
+						try{
+							var query = 'SELECT * FROM contact WHERE usrname="' + obj.usrname + '"' + 'AND password=SHA("' + obj.passwd +'")';
+							con.query(query,function(err,result,fields){
+							 	if (err) throw err;
+								var usrdata = JSON.parse(JSON.stringify(result));
+								callback(err,usrdata);
+							});
+						}catch(e){
+							callback(err,"function 1 error ");
+						}
+				},
+				function (arg1,callback,err){
+						var usrdata = arg1;
+						if ( usrdata.length == 0){
+								//usrdata = [];
+								res.render('login',{msg:'Login Fail'});
+							}
+						else{
+							//login success
+							callback(err,usrdata);
+							//res.render('home',{msg:usrdata});
+						}
+				},
+				function (arg1,callback,err){
+					var usrdata = arg1;
+					console.log(usrdata[0].id);
+					var query =　'SELECT usrname FROM contact WHERE id IN (SELECT fdid FROM CC WHERE myid =' + usrdata[0].id +')';
+					try {
+							con.query(query,function(err,result,fields){
+									if (err) throw err;
+									var usrdata = JSON.parse(JSON.stringify(result));
+									console.log(usrdata);
+									res.render('home',{msg:usrdata});
+							})
+					//login success... this function is go to database to take his firend data
+					} catch(e){
+					 		callback(err,'function 3 error');
+					}
+				}
+			],
+			function(err,result){
+				console.log("errrrror");
+			}
+		);
 });
 
 app.post('/register',function(req,res){
@@ -119,15 +170,12 @@ app.post('/register',function(req,res){
 	 console.log(obj);
 });
 
-
+/*
 var captcha = ccap();
+*/
 app.get('/',function(req,res){
-	var ary = captcha.get();
-	var txt = ary[0];
-	var buf = ary[1];
-	console.log(txt);
+	 res.render('login',{msg:''});
 });
-
 app.get('/vertify/:name',function(req,res){
 	console.log(req.params.name);
 	console.log(req.params);
