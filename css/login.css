@@ -8,6 +8,8 @@
 }
 
 .myForm,.registerForm{
+  position:relative;
+  padding:10px;
   overflow:hidden;
   background-color:black;
   width:100%;
@@ -17,8 +19,10 @@
   margin:10px;
 }
 .myForm h1 , .registerForm h1{
+  display:inline-block;
   color:white;
 }
+
 .myForm input,.registerForm input{
   color:black;
   width:100%;
@@ -26,11 +30,17 @@
   padding:14px 16px;
   border:none;
 }
-.myForm input[type="submit"],.myForm input[type="button"],.registerForm input[type="submit"]{
+.myForm input[type="submit"],
+.myForm input[type="button"],
+.registerForm input[type="submit"]{
     background-color:green;
     color:white;
 }
 
+.registerForm input[type="button"]{
+  color:white;
+  background-color:gray;
+}
 .myForm input:focus{
   background-color:
 }

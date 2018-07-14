@@ -1,0 +1,8 @@
+*{
+    box-sizing:border-box;
+}
+
+ul li{
+  text-decoration:none;
+  float:right;
+}

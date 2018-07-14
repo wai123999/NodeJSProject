@@ -1,0 +1,19 @@
+*{
+    box-sizing:border-box;
+}
+
+ul
+{
+   padding:0px;
+   background-color:green;
+}
+ul li{
+  text-decoration:none;
+  display:inline-block;
+  padding:14 15px;
+  color:white;
+}
+
+.logout{
+    float:right;
+}
