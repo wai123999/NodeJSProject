@@ -7,7 +7,8 @@ var app = express();
 var mysql = require('mysql');
 var nodemailer = require('nodemailer');
 var async = require('async'); //use for waterfall
-
+var formidable = require('formidable');
+var fs = require('fs');
 var ccap = require('ccap');//Instantiated ccap class
 
 var transporter = nodemailer.createTransport({
@@ -109,21 +110,33 @@ app.post('/form',function(req,res){
 								res.render('login',{msg:'Login Fail'});
 							}
 						else{
-							//login success
-							callback(err,usrdata);
+									//login success
+									//update the state to online
+									try{
+											//var query= 'UPDATE contact set isonline=1 WHERE usrname=' + '"wai123999"';
+											callback(err,usrdata);
+									}catch(e){
+
+									}
 							//res.render('home',{msg:usrdata});
 						}
 				},
 				function (arg1,callback,err){
 					var usrdata = arg1;
 					console.log(usrdata[0].id);
-					var query =　'SELECT usrname FROM contact WHERE id IN (SELECT fdid FROM CC WHERE myid =' + usrdata[0].id +')';
+					var query =　'SELECT usrname FROM contact WHERE id ' +
+											 'IN (SELECT fdid FROM CC WHERE myid =' + usrdata[0].id +')';
 					try {
 							con.query(query,function(err,result,fields){
 									if (err) throw err;
 									var usrdata = JSON.parse(JSON.stringify(result));
+								  var onlinePeople = usrdata.length;
 									console.log(usrdata);
-									res.render('home',{msg:usrdata});
+									var data = {
+													usrdata:usrdata,
+													onlinePeople:onlinePeople
+									};
+									res.render('home',{data:data});
 							})
 					//login success... this function is go to database to take his firend data
 					} catch(e){
@@ -137,6 +150,28 @@ app.post('/form',function(req,res){
 		);
 });
 
+app.get('/logout',function(req,res){
+		console.log(req.query);
+		console.log("some one want to logout");
+		res.write(JSON.stringify({a:123}));
+		res.end();
+});
+
+app.post('/upload',function(req,res){
+   console.log("i am upload");
+	 var form = new formidable.IncomingForm();
+	 form.parse(req,function(err,fields,files){
+		  console.log(files);
+			var oldPath = files.fileToUpload.path;
+			//console.log(oldPath); 默認會在//tmp
+			var newPath = "/upload/" + files.fileToUpload.name;
+			fs.rename(oldPath,newPath,function(err){
+				if (err) throw err;
+				res.write("File is uploaded");
+				res.end();
+			});
+	 });
+})
 app.post('/register',function(req,res){
 	/*receive the register request
 	  then send a mail to him,
